@@ -3,7 +3,7 @@ import csv
 from datetime import datetime, timedelta
 
 # Open and load the saved Starlink JSON payload
-with open("C:\\Users\\user\\Downloads\\ANG Webscrape-Lab\\starlink-webscraping\\starlink_data.json", "r") as f:
+with open("starlink_data.json", "r") as f:
     data = json.load(f)
 
 rows = []
