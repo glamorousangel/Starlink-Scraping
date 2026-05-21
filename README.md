@@ -63,10 +63,14 @@ After running successfully, the script generates:
 
 starlink_daily_usage.csv
 
+---
+
 ## CSV Format:
 Date	Data Usage
 2025-01-01	2.34 GB
 2025-01-02	3.10 GB
+
+---
 
 ## How It Works
 Loads the Starlink JSON structure
@@ -76,10 +80,14 @@ Iterates through dailyData entries
 Converts index-based entries into real calendar dates
 Writes results into a structured CSV file
 
+---
+
 ## Notes
 The script assumes dailyData is ordered sequentially per billing cycle
 Missing or invalid values are converted to 0.0 GB
 Ensure the JSON structure matches Starlink’s exported format
+
+---
 
 ## Example Use Case
 Internet usage tracking
