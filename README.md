@@ -39,17 +39,22 @@ Make sure you have the following installed:
 
 ## How to Use
 
-### 1. Export Starlink Data
+### 1. Download json Data
 
-Make sure you have a valid Starlink data export saved as:
-starlink_data.json
+Setup for JSON File
 
+- Navigate to the subscription section of your Starlink account portal.
 
-Place it in the same folder as the Python script or update the file path in the code:
+- Right-click anywhere on the page and select Inspect.
 
-```python
-with open("C:\\Users\\user\\Downloads\\ANG Webscrape-Lab\\starlink-webscraping\\starlink_data.json", "r") as f:
-```
+- Click on the Network tab at the top of the Developer Tools panel and select the Fetch/XHR filter.
+
+- Refresh the page, locate the network request containing the annotated data structure, and copy the entire text from the Response tab.
+
+- Open your project folder in VS Code, create a new file named
+
+starlink_data.json, and paste the copied response data directly into it.
+
 
 ### 2. Run the Script
 
