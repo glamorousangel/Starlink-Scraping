@@ -49,8 +49,9 @@ Place it in the same folder as the Python script or update the file path in the 
 
 ```python
 with open("C:\\Users\\user\\Downloads\\ANG Webscrape-Lab\\starlink-webscraping\\starlink_data.json", "r") as f:
+```
 
-## 2. Run the Script
+### 2. Run the Script
 
 Open a terminal or command prompt and run:
 
