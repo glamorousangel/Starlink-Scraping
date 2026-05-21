@@ -2,42 +2,44 @@ import json
 import csv
 from datetime import datetime, timedelta
 
-# 1. Load the intercepted JSON data
-with open('starlink_data.json', 'r') as file:
-    payload = json.load(file)
+# Open and load the saved Starlink JSON payload
+with open("C:\\Users\\user\\Downloads\\ANG Webscrape-Lab\\starlink-webscraping\\starlink_data.json", "r") as f:
+    data = json.load(f)
 
-extracted_rows = []
+rows = []
 
-# Navigating through Starlink's specific object tree
-billing_cycles = payload.get("content", {}).get("billingCyclesAnnotated", [])
+# Access the billing cycle data structure from the response
+cycles = data.get("content", {}).get("billingCyclesAnnotated", [])
 
-for cycle in billing_cycles:
-    # Extract structural dates for the billing cycle
-    start_date_str = cycle.get("startDate").split("T")[0] # e.g., '2025-11-17'
-    start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
-    
-    daily_usages = cycle.get("dailyData", [])
-    
-    # Enumerate through every day in the array chunk
-    for index, usage_wrapper in enumerate(daily_usages):
-        # Calculate individual day offset from the cycle's starting date
-        current_day = start_date + timedelta(days=index)
-        current_day_str = current_day.strftime("%Y-%m-%d")
-        
-        # Extract the raw decimal value inside the nested array
-        if usage_wrapper and len(usage_wrapper) > 0:
-            gb_value = round(usage_wrapper[0], 2) # Clean decimal trailing numbers
+for billing_cycle in cycles:
+    # Parse the start date of the cycle (ISO format → date only)
+    raw_start = billing_cycle.get("startDate", "").split("T")[0]
+    cycle_start = datetime.strptime(raw_start, "%Y-%m-%d")
+
+    # Retrieve the list of daily usage entries
+    daily_entries = billing_cycle.get("dailyData", [])
+
+    for i, entry in enumerate(daily_entries):
+        # Compute actual calendar date for each usage entry
+        date_label = cycle_start + timedelta(days=i)
+        date_str = date_label.strftime("%Y-%m-%d")
+
+        # Extract numeric GB value from nested structure safely
+        if entry and isinstance(entry, list) and len(entry) > 0:
+            usage_gb = round(float(entry[0]), 2)
         else:
-            gb_value = 0.0
-            
-        extracted_rows.append([current_day_str, f"{gb_value} GB"])
+            usage_gb = 0.0
 
-# 2. Write rows out to a structured, human-readable CSV format
-output_filename = "starlink_daily_usage.csv"
-with open(output_filename, "w", newline="", encoding="utf-8") as f:
-    writer = csv.writer(f)
-    # Write cleanly labeled headers
-    writer.writerow(["Date", "Data Usage"]) 
-    writer.writerows(extracted_rows)
+        rows.append([date_str, f"{usage_gb} GB"])
 
-print(f"🎉 Success! Generated '{output_filename}' containing {len(extracted_rows)} tracked entries.")
+# Write processed results into a CSV file
+output_file = "starlink_daily_usage.csv"
+
+with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
+    writer = csv.writer(csvfile)
+
+    # Column headers for readability
+    writer.writerow(["Date", "Data Usage"])
+    writer.writerows(rows)
+
+print(f"CSV export complete: '{output_file}' ({len(rows)} records written).")
